@@ -1,0 +1,23 @@
+@import "colors";
+
+:host {
+    button {
+        appearance: none;
+        padding: 8px 32px;
+        border-radius: 24px;
+        color: $blue;
+        border: 2px solid $blue;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        background-color: transparent;
+        transition: background-color .4s ease, color .4s ease;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $blue;
+            color: #fff;
+        }
+    }
+}
