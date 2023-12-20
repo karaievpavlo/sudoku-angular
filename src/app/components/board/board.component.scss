@@ -1,0 +1,13 @@
+@import 'colors';
+
+:host {
+    width: 366px;
+    height: 366px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    border-radius: 8px;
+    //border: 2px solid $grey-light;
+    box-shadow: 0px 8px 16px 0px rgba(5, 74, 183, 0.20);
+    background-color: $grey-light;
+}

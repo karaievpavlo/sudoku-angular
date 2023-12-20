@@ -1,0 +1,63 @@
+@import 'colors';
+
+:host {
+    width: 40px;
+    height: 40px;
+
+    &:nth-child(3n + 1) {
+        margin-left: 2px;
+    }
+
+    &:nth-child(1) {
+        input[type=text] {
+            border-top-left-radius: 4px;
+        }
+    }
+
+    &:nth-child(9) {
+        input[type=text] {
+            border-top-right-radius: 4px;
+        }
+    }
+
+    &:nth-child(73) {
+        input[type=text] {
+            border-bottom-left-radius: 4px;
+        }
+    }
+
+    &:nth-child(81) {
+        input[type=text] {
+            border-bottom-right-radius: 4px;
+        }
+    }
+
+    @for $i from 1 through 9 {
+        &:nth-child(#{$i}) {
+            margin-top: 2px;
+        }
+    }
+    @for $i from 28 through 36 {
+        &:nth-child(#{$i}) {
+            margin-top: 2px;
+        }
+    }
+    @for $i from 55 through 63 {
+        &:nth-child(#{$i}) {
+            margin-top: 2px;
+        }
+    }
+
+    input[type=text] {
+        width: 36px;
+        height: 36px;
+        border: 2px solid transparent;
+        background: #fff;
+        outline: none;
+
+        &:focus {
+            border-color: $blue;
+            border-radius: 4px;
+        }
+    }
+}
