@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { LevelTemplateComponent } from "./level-template.component";
 import { BoardModule } from "../board/board.module";
 import { RouterModule, Routes } from "@angular/router";
+import { DifficultSelectorModule } from "../difficult-selector/difficult-selector.module";
 
 const routes: Routes = [
     {
@@ -15,7 +16,8 @@ const routes: Routes = [
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
-        BoardModule
+        BoardModule,
+        DifficultSelectorModule
     ],
     declarations: [
         LevelTemplateComponent
