@@ -1,0 +1,47 @@
+@import 'colors';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+  margin: 0 auto;
+  padding-top: 25.2vh;
+
+  app-board {
+    margin-bottom: 20px;
+  }
+  
+  & > p {
+    margin: 0;
+    color: $grey;
+    font-size: 8px;
+    font-weight: 400;
+    opacity: .5;
+  }
+}
+
+.level-template {
+  &__top {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    color: #fff;
+    margin-bottom: 20px;
+    &-content {
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 400;
+      }
+
+      p {
+        margin: 0;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.88px;
+        opacity: .5;
+      }
+    }
+  }
+}
