@@ -7,4 +7,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class BoardComponent {}
+export class BoardComponent {
+    tiles: number[] = new Array(9 * 9);
+}
