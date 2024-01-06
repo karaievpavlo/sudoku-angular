@@ -1,10 +1,18 @@
-<app-arrow class="prev">
+<ng-container *ngIf="(currentDifficult$ | async) as difficult">
+  <app-arrow 
+    class="prev"
+    [disabled]="difficult === Difficult.Easy"
+    (click)="changeDifficult(difficult === Difficult.Hard ? Difficult.Medium : Difficult.Easy)">
 
-</app-arrow>
-<div class="difficult-selector__text">
-  <span>Level</span><br>
-  1
-</div>
-<app-arrow class="next">
-  
-</app-arrow>
+  </app-arrow>
+  <div class="difficult-selector__text">
+    <span>Level</span><br>
+    {{ difficult }}
+  </div>
+  <app-arrow 
+    class="next"
+    [disabled]="difficult === Difficult.Hard"
+    (click)="changeDifficult(difficult === Difficult.Easy ? Difficult.Medium : Difficult.Hard)">
+    
+  </app-arrow>
+</ng-container>
