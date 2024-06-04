@@ -43,6 +43,6 @@ export class BoardComponent {
         console.log(checkWin)
         if (!checkWin) return;
 
-        this.onCompleteGame.emit()
+        this.onCompleteGame.emit();
     }
 }

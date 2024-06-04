@@ -5,12 +5,19 @@ import { BLANK_BOARD } from "../common/objects/blank-board.object";
 import { Difficult } from "../common/enums/difficult.enum";
 import { BehaviorSubject, Observable } from "rxjs";
 import { DifficultHoles } from "../common/enums/difficult-holes.enum";
+import { LoaderService } from "./loader.service";
 
 @Injectable()
 export class SudokuService {
   private readonly difficult$ = new BehaviorSubject<Difficult>(Difficult.Easy);
   private readonly board$ = new BehaviorSubject<TBoard>(BLANK_BOARD);
   private counter = 0;
+
+  constructor(
+    private readonly loaderService: LoaderService
+  ) {
+
+  }
 
   setDifficult(difficult: Difficult) {
     this.difficult$.next(difficult);
@@ -191,9 +198,10 @@ export class SudokuService {
     // this function
     try {
       //counter = 0
+      this.loaderService.isLoading$.next(true);
       let solvedBoard = this.newBoard();
       // let [row, col] = this.nextEmptySpot(solvedBoard);
-
+      console.log(this.loaderService.isLoading$.value)
       // if (row !== -1 && col !== -1) {
       //   // board is full, return the solution
       //   throw new Error('Sudoku board generating');
@@ -203,6 +211,7 @@ export class SudokuService {
       // Stored the removed values for clues
       const startingBoard = this.pokeHoles(solvedBoard.map(row => row.slice()))
       this.board$.next(startingBoard);
+      this.loaderService.isLoading$.next(false);
       return this.board$.asObservable();
       
     } catch (error) {
