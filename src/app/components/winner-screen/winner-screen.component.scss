@@ -1,0 +1,108 @@
+$size: 10px;
+$speed: 5s;
+
+:host {
+  background-color: rgba(0, 0, 0, .5);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  overflow: hidden;
+  perspective: $size * 100;
+}
+
+@import "colors";
+
+:host {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: 200px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+.title {
+  margin-bottom: 50px;
+  color: #fff;
+  text-align: center;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.fireworks {
+  position: absolute;
+  top: 100%; left: 50%;
+  width: $size; height: $size;
+  transform-style: preserve-3d;
+  transform: translateX(-50%);
+  
+  @keyframes fireworksTop {
+    0% { top: 100%; }
+    25% { top: var(--height); animation-timing-function: ease-in; }
+    100% { top: 200%; }
+  }
+  
+  @for $f from 0 to 3 {
+    &:nth-child(#{$f + 1}) {
+      $delay: $f / 3 * $speed;
+      animation:
+        fireworksTop $speed $delay infinite ease-out,
+        fireworks#{$f} $speed*10 $delay infinite step-end;
+      
+      @keyframes fireworks#{$f} {
+        @for $i from 0 to 10 {
+          #{($i * 10) + "%"} {
+            left: #{(20 + random(60)) + "%"};
+            transform: translateX(-50%) scale(#{(50 + random(50)) / 100});
+            --hue: #{36 * $i};
+            --height: #{15 + random(25) + "%"}
+          }
+        }
+      } 
+      
+      & > .year {
+        background-color: hsl(calc(var(--hue) + #{$f * 120}), 100%, 75%);
+      }
+
+      @for $y from 1 through 73 {
+        & > .year:nth-child(#{$y}) {
+          --t:
+            translateX(#{(random(100) - 50) * $size})
+            translateY(#{(random(50) - 75) * $size})
+            translateZ(#{(random(100) - 50) * $size})
+            rotateX(#{random(720)}deg)
+            rotateY(#{random(720)}deg)
+            rotateZ(#{random(720)}deg)
+            scale(0);
+        }
+      }
+    }
+  }
+   
+  & > .year {
+    position: absolute;
+    width: 100%; height: 100%;
+    background-color: #fff;
+    animation: yearTransform $speed infinite ease-out;
+    animation-delay: inherit;
+       
+    @keyframes yearTransform {
+      0% { transform: scale(0); }
+      25% { transform: none; }
+      100% { transform: var(--t); }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+@import "colors";
+
+:host {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.welcome {
+    &__title {
+        margin-bottom: 7.4vh;
+        margin-top: 27.6vh;
+        color: #fff;
+        text-align: center;
+        font-size: 64px;
+        font-weight: 400;
+        line-height: 12.8vh;
+    }
+    &__description {
+        max-width: 265px;
+        margin: 0 auto;
+        margin-bottom: 4vh;
+        color: $grey;
+        text-align: center;
+        font-size: 14px;
+        line-height: 20px;
+    }
+}

@@ -1,0 +1,6 @@
+<ng-container *ngFor="let row of (board$ | async) as board; let rowIndex = index">
+    <ng-container *ngFor="let col of row; let colIndex = index; trackBy: trackByIndex; let invalid">
+        <app-square-tile [value]="col"
+                         (onChangeValue)="setValue(board, rowIndex, colIndex, $event); invalid"></app-square-tile>
+    </ng-container>
+</ng-container>
