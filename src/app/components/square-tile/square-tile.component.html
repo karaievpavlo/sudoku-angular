@@ -1,1 +1,7 @@
-<input type="text" [pattern]="1-9">
+<input type="text" 
+       pattern="1-9"
+       [class.invalid]="invalid"
+       [value]="(value$ | async) || ''"
+       [disabled]="(value$ | async)"
+       (keydown)="keyDigitFiltration($event)"
+       (change)="$event.preventDefault(); changeValue($event)">

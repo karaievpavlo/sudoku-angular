@@ -17,8 +17,13 @@
     cursor: pointer;
     transition: border-color .4s ease;
 
-    &:hover {
+    &:hover &:not(:disabled) {
       border-color: #fff;
+    }
+
+    &:disabled {
+      opacity: .3;
+      cursor: default;
     }
   }
 }
