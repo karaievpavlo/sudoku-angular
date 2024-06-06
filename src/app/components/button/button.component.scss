@@ -24,13 +24,12 @@
 
 :host-context(.white) {
     button {
-        color: #fff;
-        border-color: currentColor;
+        color: $blue;
+        background-color: #fff;
+        border-color: transparent;
 
         &:hover {
-            background-color: #fff;
-            border-color: #fff;
-            color: $blue;
+            box-shadow: inset 0px 100px 100px rgba(0,0,0, .1);
         }
     }
 }

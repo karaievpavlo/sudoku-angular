@@ -23,4 +23,4 @@
 
 <app-winner-screen 
   *ngIf="isCompleteGame$ | async"
-  (onStartNewGame)="startNewGame()"></app-winner-screen>
+  (onStartNewGame)="startNewGame(); isCompleteGame$.next(false)"></app-winner-screen>

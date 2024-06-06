@@ -25,13 +25,16 @@ export class BoardComponent {
     }
 
     setValue(board: TBoard, row: number, col: number, value: number) {
-        this.checkValue(board, row, col, +value);
+        const checkValue = this.checkValue(board, row, col, +value);
         board[row][col] = +value;
+
+        if (!checkValue) return;
+        this.checkWin(board);
     }
 
     checkValue(board: TBoard, row: number, col: number, value: number) {
         const checkValue = this.sudokuService.checkValue(board, row, col, value);
-        console.log(checkValue)
+
         if (!checkValue) return false;
         this.checkWin(board);
 
@@ -40,7 +43,7 @@ export class BoardComponent {
 
     checkWin(board: TBoard) {
         const checkWin = this.sudokuService.checkWin(board);
-        console.log(checkWin)
+
         if (!checkWin) return;
 
         this.onCompleteGame.emit();

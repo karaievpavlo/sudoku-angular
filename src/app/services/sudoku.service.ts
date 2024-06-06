@@ -11,7 +11,6 @@ import { LoaderService } from "./loader.service";
 export class SudokuService {
   private readonly difficult$ = new BehaviorSubject<Difficult>(Difficult.Easy);
   private readonly board$ = new BehaviorSubject<TBoard>(BLANK_BOARD);
-  private counter = 0;
 
   constructor(
     private readonly loaderService: LoaderService
@@ -78,7 +77,6 @@ export class SudokuService {
   ): boolean {
     const boxRow: number = Math.floor(row / 3) * 3;
     const boxCol: number = Math.floor(column / 3) * 3;
-  
     for (var r = 0; r < 3; r++) {
       for (var c = 0; c < 3; c++) {
         if (board[boxRow + r][boxCol + c] === value) return false;
@@ -105,22 +103,53 @@ export class SudokuService {
     return false;
   };
 
-  checkWin(board: TBoard): boolean {
-    const [row, col] = this.nextEmptySpot(board);
-    if (row === -1 && col === -1) {
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-          if (!this.checkValue(board, i, j, board[i][j])) return false;
+  isBoardValid(board: TBoard): boolean {
+
+    for (let row = 0; row < 9; row++) {
+      if (!this.isUniqueArray(board[row])) {
+        return false;
+      }
+    }
+
+    for (let col = 0; col < 9; col++) {
+      const column = board.map(row => row[col]);
+      if (!this.isUniqueArray(column)) {
+        return false;
+      }
+    }
+
+    for (let row = 0; row < 9; row += 3) {
+      for (let col = 0; col < 9; col += 3) {
+        const box = [];
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            box.push(board[row + r][col + c]);
+          }
+        }
+        if (!this.isUniqueArray(box)) {
+          return false;
         }
       }
-      return true;
     }
-  
-    return false;
-  };
+
+    return true;
+  }
+
+  private isUniqueArray(arr: number[]): boolean {
+    const set = new Set(arr);
+    return set.size === 9 && !set.has(0);
+  }
+
+  checkWin(board: TBoard): boolean {
+    const [row, column] = this.nextEmptySpot(board);
+
+    if (!row && !column) return false;
+
+    return this.isBoardValid(board);
+  }
 
   private shuffle() {
-    const numArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const numArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     for ( let i = numArray.length - 1; i > 0; i-- ) {
         const j = Math.floor( Math.random() * ( i + 1 ) );
         [ numArray[ i ], numArray[ j ] ] = [ numArray[ j ], numArray[ i ] ];
@@ -133,7 +162,6 @@ export class SudokuService {
     let [row, col] = this.nextEmptySpot(board);
 
     if (row === -1 && col === -1) {
-      // board is full, return the solution
       return board;
     }
   
@@ -151,7 +179,7 @@ export class SudokuService {
     return board;
   };
 
-  private newBoard() { // Create an unaffiliated clone of a fresh board
+  private newBoard() {
     let board = this.solveSudoku(BLANK_BOARD?.map(row => row?.slice()));
     const [row, col] = this.nextEmptySpot(board);
 
@@ -159,56 +187,36 @@ export class SudokuService {
       this.newBoard();
     }
 
-    return board; // Populate the board using backtracking algorithm
+    return board;
   }
   
   private pokeHoles(board: TBoard): TBoard {
-    const removedVals = []
-    const holesCount = this.getHolesCountByDifficult(this.difficult$.value)
+    const removedVals = [];
+    const holesCount = this.getHolesCountByDifficult(this.difficult$.value);
 
     while (removedVals.length < holesCount) {
-      const val = Math.floor(Math.random() * 81) // Value between 0-81
-      const randomRowIndex = Math.floor(val / 9) // Integer 0-8 for row index
-      const randomColIndex = val % 9 
+      const val = Math.floor(Math.random() * 81);
+      const randomRowIndex = Math.floor(val / 9);
+      const randomColIndex = val % 9;
 
-      if (!board[ randomRowIndex ]) continue // guard against cloning error
-      if ( board[ randomRowIndex ][ randomColIndex ] == 0 ) continue // If cell already empty, restart loop
+      if (!board[ randomRowIndex ]) continue;
+      if ( board[ randomRowIndex ][ randomColIndex ] == 0 ) continue;
       
-      removedVals.push({  // Store the current value at the coordinates
+      removedVals.push({
         rowIndex: randomRowIndex, 
         colIndex: randomColIndex, 
         val: board[ randomRowIndex ][ randomColIndex ] 
       })
-      board[ randomRowIndex ][ randomColIndex ] = 0 // "poke a hole" in the board at the coords
-      const proposedBoard = board.map(row => row.slice()) // Clone this changed board
-      
-      // Attempt to solve the board after removing value. If it cannot be solved, restore the old value.
-      // and remove that option from the list
-      // if (!this.solveSudoku(proposedBoard)) {  
-      //   board[ randomRowIndex ][ randomColIndex ] = removedVals.pop().val 
-      // }
+      board[ randomRowIndex ][ randomColIndex ] = 0;
     }
-    return board
+    return board;
   }
 
   newStartingBoard(): Observable<TBoard> {
-    // Reset global iteration counter to 0 and Try to generate a new game. 
-    // If counter reaches its maximum limit in the fillPuzzle function, current attemp will abort
-    // To prevent the abort from crashing the script, the error is caught and used to re-run
-    // this function
     try {
-      //counter = 0
       this.loaderService.isLoading$.next(true);
       let solvedBoard = this.newBoard();
-      // let [row, col] = this.nextEmptySpot(solvedBoard);
-      console.log(this.loaderService.isLoading$.value)
-      // if (row !== -1 && col !== -1) {
-      //   // board is full, return the solution
-      //   throw new Error('Sudoku board generating');
-      // }
-      console.table(solvedBoard)
-      // Clone the populated board and poke holes in it. 
-      // Stored the removed values for clues
+
       const startingBoard = this.pokeHoles(solvedBoard.map(row => row.slice()))
       this.board$.next(startingBoard);
       this.loaderService.isLoading$.next(false);
